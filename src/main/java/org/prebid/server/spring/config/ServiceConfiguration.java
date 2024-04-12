@@ -79,9 +79,6 @@ import org.prebid.server.cookie.CoopSyncProvider;
 import org.prebid.server.cookie.PrioritizedCoopSyncProvider;
 import org.prebid.server.cookie.UidsCookieService;
 import org.prebid.server.currency.CurrencyConversionService;
-import org.prebid.server.deals.DealsService;
-import org.prebid.server.deals.UserAdditionalInfoService;
-import org.prebid.server.deals.events.ApplicationEventService;
 import org.prebid.server.events.EventsService;
 import org.prebid.server.execution.TimeoutFactory;
 import org.prebid.server.floors.PriceFloorAdjuster;
@@ -117,9 +114,9 @@ import org.prebid.server.validation.ResponseBidValidator;
 import org.prebid.server.validation.VideoRequestValidator;
 import org.prebid.server.vast.VastModifier;
 import org.prebid.server.version.PrebidVersionProvider;
-import org.prebid.server.vertx.http.BasicHttpClient;
-import org.prebid.server.vertx.http.CircuitBreakerSecuredHttpClient;
-import org.prebid.server.vertx.http.HttpClient;
+import org.prebid.server.vertx.httpclient.BasicHttpClient;
+import org.prebid.server.vertx.httpclient.CircuitBreakerSecuredHttpClient;
+import org.prebid.server.vertx.httpclient.HttpClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -369,11 +366,9 @@ public class ServiceConfiguration {
             ApplicationSettings applicationSettings,
             IpAddressHelper ipAddressHelper,
             HookStageExecutor hookStageExecutor,
-            @Autowired(required = false) UserAdditionalInfoService userAdditionalInfoService,
             CountryCodeMapper countryCodeMapper,
             PriceFloorProcessor priceFloorProcessor,
-            Metrics metrics,
-            Clock clock) {
+            Metrics metrics) {
 
         final List<String> blacklistedAccounts = splitToList(blacklistedAccountsString);
 
@@ -390,11 +385,9 @@ public class ServiceConfiguration {
                 applicationSettings,
                 ipAddressHelper,
                 hookStageExecutor,
-                userAdditionalInfoService,
                 priceFloorProcessor,
                 countryCodeMapper,
-                metrics,
-                clock);
+                metrics);
     }
 
     @Bean
@@ -811,7 +804,6 @@ public class ServiceConfiguration {
             @Value("${logging.sampling-rate:0.01}") double logSamplingRate,
             BidderCatalog bidderCatalog,
             StoredResponseProcessor storedResponseProcessor,
-            @Autowired(required = false) DealsService dealsService,
             PrivacyEnforcementService privacyEnforcementService,
             FpdResolver fpdResolver,
             SupplyChainResolver supplyChainResolver,
@@ -827,7 +819,6 @@ public class ServiceConfiguration {
             BidResponseCreator bidResponseCreator,
             BidResponsePostProcessor bidResponsePostProcessor,
             HookStageExecutor hookStageExecutor,
-            @Autowired(required = false) ApplicationEventService applicationEventService,
             HttpInteractionLogger httpInteractionLogger,
             PriceFloorAdjuster priceFloorAdjuster,
             PriceFloorEnforcer priceFloorEnforcer,
@@ -843,7 +834,6 @@ public class ServiceConfiguration {
                 logSamplingRate,
                 bidderCatalog,
                 storedResponseProcessor,
-                dealsService,
                 privacyEnforcementService,
                 fpdResolver,
                 supplyChainResolver,
@@ -859,7 +849,6 @@ public class ServiceConfiguration {
                 bidResponseCreator,
                 bidResponsePostProcessor,
                 hookStageExecutor,
-                applicationEventService,
                 httpInteractionLogger,
                 priceFloorAdjuster,
                 priceFloorEnforcer,
@@ -1022,16 +1011,12 @@ public class ServiceConfiguration {
     ResponseBidValidator responseValidator(
             @Value("${auction.validations.banner-creative-max-size}") BidValidationEnforcement bannerMaxSizeEnforcement,
             @Value("${auction.validations.secure-markup}") BidValidationEnforcement secureMarkupEnforcement,
-            Metrics metrics,
-            JacksonMapper mapper,
-            @Value("${deals.enabled}") boolean dealsEnabled) {
+            Metrics metrics) {
 
         return new ResponseBidValidator(
                 bannerMaxSizeEnforcement,
                 secureMarkupEnforcement,
                 metrics,
-                mapper,
-                dealsEnabled,
                 logSamplingRate);
     }
 
