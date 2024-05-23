@@ -13,6 +13,8 @@ public class HttpLogSpec {
 
     String bidder;
 
+    Boolean debug;
+
     int limit;
 
     public enum Endpoint {

@@ -716,12 +716,14 @@ public class ServiceConfiguration {
             @Autowired(required = false) BidderRequestCompletionTrackerFactory bidderRequestCompletionTrackerFactory,
             BidderErrorNotifier bidderErrorNotifier,
             HttpBidderRequestEnricher requestEnricher,
+            HttpInteractionLogger httpInteractionLogger,
             JacksonMapper mapper) {
 
         return new HttpBidderRequester(httpClient,
                 bidderRequestCompletionTrackerFactory,
                 bidderErrorNotifier,
                 requestEnricher,
+                httpInteractionLogger,
                 mapper);
     }
 

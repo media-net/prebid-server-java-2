@@ -59,7 +59,7 @@ public class HttpInteractionLoggerTest extends VertxTest {
         // given
         final AuctionContext givenAuctionContext =
                 givenAuctionContext(accountBuilder -> accountBuilder.id("123"));
-        final HttpLogSpec givenSpec = HttpLogSpec.of(null, null, "123", null, 1);
+        final HttpLogSpec givenSpec = HttpLogSpec.of(null, null, "123", null, null, 1);
 
         // when
         target.setSpec(givenSpec);
@@ -79,7 +79,7 @@ public class HttpInteractionLoggerTest extends VertxTest {
         // given
         final AuctionContext givenAuctionContext =
                 givenAuctionContext(accountBuilder -> accountBuilder.id("123"));
-        final HttpLogSpec givenSpec = HttpLogSpec.of(null, null, "123", null, 1);
+        final HttpLogSpec givenSpec = HttpLogSpec.of(null, null, "123", null, null, 1);
 
         // when
         target.setSpec(givenSpec);
@@ -95,7 +95,7 @@ public class HttpInteractionLoggerTest extends VertxTest {
         // given
         final AuctionContext givenAuctionContext =
                 givenAuctionContext(accountBuilder -> accountBuilder.id("456"));
-        final HttpLogSpec givenSpec = HttpLogSpec.of(null, null, "123", null, 1);
+        final HttpLogSpec givenSpec = HttpLogSpec.of(null, null, "123", null, null, 1);
 
         // when
         target.setSpec(givenSpec);
@@ -109,7 +109,7 @@ public class HttpInteractionLoggerTest extends VertxTest {
     public void maybeLogOpenrtb2AuctionShouldLogIfStatusEqualsToGivenInSpec() {
         // given
         final AuctionContext givenAuctionContext = givenAuctionContext(identity());
-        final HttpLogSpec givenSpec = HttpLogSpec.of(null, 501, null, null, 1);
+        final HttpLogSpec givenSpec = HttpLogSpec.of(null, 501, null, null, null, 1);
 
         // when
         target.setSpec(givenSpec);
@@ -125,7 +125,7 @@ public class HttpInteractionLoggerTest extends VertxTest {
     public void maybeLogOpenrtb2AuctionShouldLogIfSpecEndpointIsAuction() {
         // given
         final AuctionContext givenAuctionContext = givenAuctionContext(identity());
-        final HttpLogSpec givenSpec = HttpLogSpec.of(HttpLogSpec.Endpoint.auction, null, null, null, 1);
+        final HttpLogSpec givenSpec = HttpLogSpec.of(HttpLogSpec.Endpoint.auction, null, null, null, null, 1);
 
         // when
         target.setSpec(givenSpec);
@@ -139,7 +139,7 @@ public class HttpInteractionLoggerTest extends VertxTest {
     public void maybeLogOpenrtb2AuctionShouldNotLogIfSpecEndpointIsNotAuction() {
         // given
         final AuctionContext givenAuctionContext = givenAuctionContext(identity());
-        final HttpLogSpec givenSpec = HttpLogSpec.of(HttpLogSpec.Endpoint.amp, null, null, null, 1);
+        final HttpLogSpec givenSpec = HttpLogSpec.of(HttpLogSpec.Endpoint.amp, null, null, null, null, 1);
 
         // when
         target.setSpec(givenSpec);
@@ -158,7 +158,7 @@ public class HttpInteractionLoggerTest extends VertxTest {
                 }""");
         final AuctionContext givenAuctionContext =
                 givenAuctionContext(accountBuilder -> accountBuilder.id("123"));
-        final HttpLogSpec givenSpec = HttpLogSpec.of(null, null, "123", null, 1);
+        final HttpLogSpec givenSpec = HttpLogSpec.of(null, null, "123", null, null, 1);
 
         // when
         target.setSpec(givenSpec);
@@ -174,7 +174,7 @@ public class HttpInteractionLoggerTest extends VertxTest {
         given(routingContext.getBodyAsString()).willReturn("{");
         final AuctionContext givenAuctionContext =
                 givenAuctionContext(accountBuilder -> accountBuilder.id("123"));
-        final HttpLogSpec givenSpec = HttpLogSpec.of(null, null, "123", null, 1);
+        final HttpLogSpec givenSpec = HttpLogSpec.of(null, null, "123", null, null, 1);
 
         // when
         target.setSpec(givenSpec);
@@ -189,7 +189,7 @@ public class HttpInteractionLoggerTest extends VertxTest {
         // given
         final AuctionContext givenAuctionContext =
                 givenAuctionContext(accountBuilder -> accountBuilder.id("123"));
-        final HttpLogSpec givenSpec = HttpLogSpec.of(null, null, "123", null, 1);
+        final HttpLogSpec givenSpec = HttpLogSpec.of(null, null, "123", null, null, 1);
 
         // when
         target.setSpec(givenSpec);
@@ -208,7 +208,7 @@ public class HttpInteractionLoggerTest extends VertxTest {
         // given
         final AuctionContext givenAuctionContext =
                 givenAuctionContext(accountBuilder -> accountBuilder.id("123"));
-        final HttpLogSpec givenSpec = HttpLogSpec.of(null, null, "123", null, 1);
+        final HttpLogSpec givenSpec = HttpLogSpec.of(null, null, "123", null, null, 1);
 
         // when
         target.setSpec(givenSpec);
@@ -224,7 +224,7 @@ public class HttpInteractionLoggerTest extends VertxTest {
         // given
         final AuctionContext givenAuctionContext =
                 givenAuctionContext(accountBuilder -> accountBuilder.id("456"));
-        final HttpLogSpec givenSpec = HttpLogSpec.of(null, null, "123", null, 1);
+        final HttpLogSpec givenSpec = HttpLogSpec.of(null, null, "123", null, null, 1);
 
         // when
         target.setSpec(givenSpec);
@@ -238,7 +238,7 @@ public class HttpInteractionLoggerTest extends VertxTest {
     public void maybeLogOpenrtb2AmpShouldLogIfStatusEqualsToGivenInSpec() {
         // given
         final AuctionContext givenAuctionContext = givenAuctionContext(identity());
-        final HttpLogSpec givenSpec = HttpLogSpec.of(null, 501, null, null, 1);
+        final HttpLogSpec givenSpec = HttpLogSpec.of(null, 501, null, null, null, 1);
 
         // when
         target.setSpec(givenSpec);
@@ -254,7 +254,7 @@ public class HttpInteractionLoggerTest extends VertxTest {
     public void maybeLogOpenrtb2AmpShouldLogIfSpecEndpointIsAmp() {
         // given
         final AuctionContext givenAuctionContext = givenAuctionContext(identity());
-        final HttpLogSpec givenSpec = HttpLogSpec.of(HttpLogSpec.Endpoint.amp, null, null, null, 1);
+        final HttpLogSpec givenSpec = HttpLogSpec.of(HttpLogSpec.Endpoint.amp, null, null, null, null, 1);
 
         // when
         target.setSpec(givenSpec);
@@ -268,7 +268,7 @@ public class HttpInteractionLoggerTest extends VertxTest {
     public void maybeLogOpenrtb2AmpShouldNotLogIfSpecEndpointIsNotAmp() {
         // given
         final AuctionContext givenAuctionContext = givenAuctionContext(identity());
-        final HttpLogSpec givenSpec = HttpLogSpec.of(HttpLogSpec.Endpoint.auction, null, null, null, 1);
+        final HttpLogSpec givenSpec = HttpLogSpec.of(HttpLogSpec.Endpoint.auction, null, null, null, null, 1);
 
         // when
         target.setSpec(givenSpec);
@@ -284,7 +284,7 @@ public class HttpInteractionLoggerTest extends VertxTest {
         final AuctionContext givenAuctionContext =
                 givenAuctionContext(accountBuilder -> accountBuilder.id("123"));
         final BidderRequest givenBidderRequest = givenBidderRequest(identity());
-        final HttpLogSpec givenSpec = HttpLogSpec.of(null, null, "123", "bidderName", 1);
+        final HttpLogSpec givenSpec = HttpLogSpec.of(null, null, "123", "bidderName", null, 1);
 
         // when
         target.setSpec(givenSpec);
@@ -300,7 +300,7 @@ public class HttpInteractionLoggerTest extends VertxTest {
         final AuctionContext givenAuctionContext =
                 givenAuctionContext(accountBuilder -> accountBuilder.id("123"));
         final BidderRequest givenBidderRequest = givenBidderRequest(identity());
-        final HttpLogSpec givenSpec = HttpLogSpec.of(null, null, "123", "bidderName", 1);
+        final HttpLogSpec givenSpec = HttpLogSpec.of(null, null, "123", "bidderName", null, 1);
 
         // when
         target.setSpec(givenSpec);
@@ -317,7 +317,7 @@ public class HttpInteractionLoggerTest extends VertxTest {
         final AuctionContext givenAuctionContext =
                 givenAuctionContext(accountBuilder -> accountBuilder.id("123"));
         final BidderRequest givenBidderRequest = givenBidderRequest(identity());
-        final HttpLogSpec givenSpec = HttpLogSpec.of(null, null, "123", "bidderName", 1);
+        final HttpLogSpec givenSpec = HttpLogSpec.of(null, null, "123", "bidderName", null, 1);
 
         // when
         target.setSpec(givenSpec);
@@ -333,7 +333,7 @@ public class HttpInteractionLoggerTest extends VertxTest {
         final AuctionContext givenAuctionContext =
                 givenAuctionContext(accountBuilder -> accountBuilder.id("123"));
         final BidderRequest givenBidderRequest = givenBidderRequest(identity());
-        final HttpLogSpec givenSpec = HttpLogSpec.of(null, null, "123", "anotherBidder", 1);
+        final HttpLogSpec givenSpec = HttpLogSpec.of(null, null, "123", "anotherBidder", null, 1);
 
         // when
         target.setSpec(givenSpec);
@@ -351,7 +351,7 @@ public class HttpInteractionLoggerTest extends VertxTest {
                 .requestTypeMetric(MetricName.openrtb2web)
                 .build();
         final BidderRequest givenBidderRequest = givenBidderRequest(identity());
-        final HttpLogSpec givenSpec = HttpLogSpec.of(HttpLogSpec.Endpoint.auction, null, null, "bidderName", 1);
+        final HttpLogSpec givenSpec = HttpLogSpec.of(HttpLogSpec.Endpoint.auction, null, null, "bidderName", null, 1);
 
         // when
         target.setSpec(givenSpec);
@@ -369,7 +369,7 @@ public class HttpInteractionLoggerTest extends VertxTest {
                 .requestTypeMetric(MetricName.openrtb2app)
                 .build();
         final BidderRequest givenBidderRequest = givenBidderRequest(identity());
-        final HttpLogSpec givenSpec = HttpLogSpec.of(HttpLogSpec.Endpoint.auction, null, null, "bidderName", 1);
+        final HttpLogSpec givenSpec = HttpLogSpec.of(HttpLogSpec.Endpoint.auction, null, null, "bidderName", null, 1);
 
         // when
         target.setSpec(givenSpec);
@@ -387,7 +387,7 @@ public class HttpInteractionLoggerTest extends VertxTest {
                 .requestTypeMetric(MetricName.openrtb2dooh)
                 .build();
         final BidderRequest givenBidderRequest = givenBidderRequest(identity());
-        final HttpLogSpec givenSpec = HttpLogSpec.of(HttpLogSpec.Endpoint.auction, null, null, "bidderName", 1);
+        final HttpLogSpec givenSpec = HttpLogSpec.of(HttpLogSpec.Endpoint.auction, null, null, "bidderName", null, 1);
 
         // when
         target.setSpec(givenSpec);
@@ -405,7 +405,7 @@ public class HttpInteractionLoggerTest extends VertxTest {
                 .requestTypeMetric(MetricName.amp)
                 .build();
         final BidderRequest givenBidderRequest = givenBidderRequest(identity());
-        final HttpLogSpec givenSpec = HttpLogSpec.of(HttpLogSpec.Endpoint.amp, null, null, "bidderName", 1);
+        final HttpLogSpec givenSpec = HttpLogSpec.of(HttpLogSpec.Endpoint.amp, null, null, "bidderName", null, 1);
 
         // when
         target.setSpec(givenSpec);
@@ -428,7 +428,7 @@ public class HttpInteractionLoggerTest extends VertxTest {
                                 .ext(mapper.createObjectNode()
                                         .set("bidder", mapper.createObjectNode()
                                                 .set("param", new TextNode("value")))).build())));
-        final HttpLogSpec givenSpec = HttpLogSpec.of(HttpLogSpec.Endpoint.amp, null, null, "bidderName", 1);
+        final HttpLogSpec givenSpec = HttpLogSpec.of(HttpLogSpec.Endpoint.amp, null, null, "bidderName", null, 1);
 
         // when
         target.setSpec(givenSpec);
@@ -450,7 +450,7 @@ public class HttpInteractionLoggerTest extends VertxTest {
         final BidderRequest givenBidderRequest = givenBidderRequest(
                 bidRequestBuilder -> bidRequestBuilder
                         .imp(singletonList(Imp.builder().build())));
-        final HttpLogSpec givenSpec = HttpLogSpec.of(HttpLogSpec.Endpoint.amp, null, null, "bidderName", 1);
+        final HttpLogSpec givenSpec = HttpLogSpec.of(HttpLogSpec.Endpoint.amp, null, null, "bidderName", null, 1);
 
         // when
         target.setSpec(givenSpec);

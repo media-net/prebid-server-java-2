@@ -19,6 +19,7 @@ public class HttpInteractionLogHandler implements Handler<RoutingContext> {
     private static final String STATUS_CODE_PARAMETER = "statusCode";
     private static final String ACCOUNT_PARAMETER = "account";
     private static final String BIDDER_PARAMETER = "bidder";
+    private static final String DEBUG_PARAMETER = "debug";
     private static final String LIMIT_PARAMETER = "limit";
 
     private final int maxLimit;
@@ -41,6 +42,7 @@ public class HttpInteractionLogHandler implements Handler<RoutingContext> {
                     readStatusCode(parameters),
                     readAccount(parameters),
                     readBidder(parameters),
+                    readDebug(parameters),
                     readLimit(parameters)));
 
             HttpUtil.executeSafely(routingContext, endpoint,
@@ -82,6 +84,10 @@ public class HttpInteractionLogHandler implements Handler<RoutingContext> {
         return parameters.get(BIDDER_PARAMETER);
     }
 
+    private Boolean readDebug(MultiMap parameters) {
+        return getBooleanParameter(DEBUG_PARAMETER, parameters);
+    }
+
     private int readLimit(MultiMap parameters) {
         final Integer limit = getIntParameter(LIMIT_PARAMETER, parameters);
 
@@ -104,5 +110,10 @@ public class HttpInteractionLogHandler implements Handler<RoutingContext> {
         } catch (NumberFormatException e) {
             throw new InvalidRequestException("Invalid '%s' parameter value".formatted(parameterName));
         }
+    }
+
+    private Boolean getBooleanParameter(String parameterName, MultiMap parameters) {
+        final String value = parameters.get(parameterName);
+        return value != null ? Boolean.parseBoolean(value) : null;
     }
 }

@@ -26,6 +26,7 @@ import org.prebid.server.bidder.model.Result;
 import org.prebid.server.exception.PreBidException;
 import org.prebid.server.execution.Timeout;
 import org.prebid.server.json.JacksonMapper;
+import org.prebid.server.log.HttpInteractionLogger;
 import org.prebid.server.log.Logger;
 import org.prebid.server.log.LoggerFactory;
 import org.prebid.server.model.CaseInsensitiveMultiMap;
@@ -67,18 +68,21 @@ public class HttpBidderRequester {
     private final BidderRequestCompletionTrackerFactory completionTrackerFactory;
     private final BidderErrorNotifier bidderErrorNotifier;
     private final HttpBidderRequestEnricher requestEnricher;
+    private final HttpInteractionLogger httpInteractionLogger;
     private final JacksonMapper mapper;
 
     public HttpBidderRequester(HttpClient httpClient,
                                BidderRequestCompletionTrackerFactory completionTrackerFactory,
                                BidderErrorNotifier bidderErrorNotifier,
                                HttpBidderRequestEnricher requestEnricher,
+                               HttpInteractionLogger httpInteractionLogger,
                                JacksonMapper mapper) {
 
         this.httpClient = Objects.requireNonNull(httpClient);
         this.completionTrackerFactory = completionTrackerFactoryOrFallback(completionTrackerFactory);
         this.bidderErrorNotifier = Objects.requireNonNull(bidderErrorNotifier);
         this.requestEnricher = Objects.requireNonNull(requestEnricher);
+        this.httpInteractionLogger = Objects.requireNonNull(httpInteractionLogger);
         this.mapper = Objects.requireNonNull(mapper);
     }
 
@@ -121,7 +125,7 @@ public class HttpBidderRequester {
         final List<Future<Void>> httpRequestFutures = httpCalls
                 .map(httpCallFuture -> httpCallFuture
                         .map(httpCall -> bidderErrorNotifier.processTimeout(httpCall, bidder))
-                        .map(httpCall -> processHttpCall(bidder, bidRequest, resultBuilder, httpCall)))
+                        .map(httpCall -> processHttpCall(bidderName, bidder, bidRequest, resultBuilder, httpCall)))
                 .toList();
 
         return CompositeFuture.any(
@@ -279,11 +283,12 @@ public class HttpBidderRequester {
         return null;
     }
 
-    private <T> Void processHttpCall(Bidder<T> bidder,
+    private <T> Void processHttpCall(String bidderName,
+                                     Bidder<T> bidder,
                                      BidRequest bidRequest,
                                      ResultBuilder<T> seatBidBuilder,
                                      BidderCall<T> httpCall) {
-
+        httpInteractionLogger.maybeLogResolvedRequest(bidderName, bidRequest, httpCall);
         seatBidBuilder.addHttpCall(httpCall, makeBids(bidder, httpCall, bidRequest));
         return null;
     }
