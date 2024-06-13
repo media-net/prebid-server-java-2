@@ -5,11 +5,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.iab.openrtb.request.BidRequest;
 import com.iab.openrtb.request.Imp;
+import com.iab.openrtb.request.Publisher;
+import com.iab.openrtb.request.Site;
 import io.vertx.ext.web.RoutingContext;
 import lombok.Value;
 import org.apache.commons.collections4.CollectionUtils;
 import org.prebid.server.auction.model.AuctionContext;
 import org.prebid.server.auction.model.BidderRequest;
+import org.prebid.server.bidder.model.BidderCall;
 import org.prebid.server.json.JacksonMapper;
 import org.prebid.server.log.model.HttpLogSpec;
 import org.prebid.server.metric.MetricName;
@@ -18,6 +21,7 @@ import org.prebid.server.util.ObjectUtil;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -91,6 +95,20 @@ public class HttpInteractionLogger {
         }
     }
 
+    public <T> void maybeLogResolvedRequest(String bidder, BidRequest bidRequest, BidderCall<T> httpCall) {
+        if (interactionSatisfiesSpec(bidder, bidRequest)) {
+            final String jsonHttpRequest = mapper.encodeToString(httpCall.getRequest().getPayload());
+            final String jsonHttpResponse = httpCall.getResponse().getBody();
+            final String jsonBidderError = mapper.encodeToString(httpCall.getError());
+            logger.info("Bidder: {}, Http request: \"{}\", Response body: \"{}\", Bidder Error: \"{}\"",
+                    bidder,
+                    jsonHttpRequest,
+                    jsonHttpResponse,
+                    jsonBidderError);
+            incLoggedInteractions();
+        }
+    }
+
     private boolean interactionSatisfiesSpec(HttpLogSpec.Endpoint requestEndpoint,
                                              int requestStatusCode,
                                              AuctionContext auctionContext) {
@@ -113,6 +131,31 @@ public class HttpInteractionLogger {
                 && (account == null || account.equals(requestAccountId));
     }
 
+    private boolean interactionSatisfiesSpec(String requestBidder, BidRequest bidRequest) {
+        final SpecWithCounter specWithCounter = this.specWithCounter.get();
+        if (specWithCounter == null) {
+            return false;
+        }
+
+        final HttpLogSpec.Endpoint requestEndpoint = parseHttpLogEndpoint(requestTypeMetric(bidRequest));
+        final String requestAccountId = Optional.of(bidRequest)
+                .map(BidRequest::getSite)
+                .map(Site::getPublisher)
+                .map(Publisher::getId)
+                .orElse(null);
+
+        final HttpLogSpec spec = specWithCounter.getSpec();
+        final HttpLogSpec.Endpoint endpoint = spec.getEndpoint();
+        final String account = spec.getAccount();
+        final String bidder = spec.getBidder();
+        final Boolean debug = spec.getDebug();
+
+        return (endpoint == null || endpoint == requestEndpoint)
+                && (account == null || account.equals(requestAccountId))
+                && (bidder == null || bidder.equals(requestBidder))
+                && Boolean.TRUE.equals(debug);
+    }
+
     private boolean interactionSatisfiesSpec(AuctionContext auctionContext,
                                              String requestBidder) {
         final SpecWithCounter specWithCounter = this.specWithCounter.get();
@@ -133,6 +176,16 @@ public class HttpInteractionLogger {
         return (endpoint == null || endpoint == requestEndpoint)
                 && (account == null || account.equals(requestAccountId))
                 && bidder != null && bidder.equals(requestBidder);
+    }
+
+    private MetricName requestTypeMetric(BidRequest bidRequest) {
+        if (bidRequest.getApp() != null) {
+            return MetricName.openrtb2app;
+        } else if (bidRequest.getDooh() != null) {
+            return MetricName.openrtb2dooh;
+        } else {
+            return MetricName.openrtb2web;
+        }
     }
 
     private HttpLogSpec.Endpoint parseHttpLogEndpoint(MetricName requestTypeMetric) {
